@@ -21,6 +21,7 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between text-gray-800">
 
+    <!-- ================= HEADER + NAV ================= -->
     <header class="bg-gradient-to-r from-emerald-800 via-emerald-700 to-green-900 text-white shadow-lg border-b-4 border-red-600 no-print">
         <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-3 text-center sm:text-left">
@@ -32,15 +33,20 @@
                     <p class="text-xs sm:text-sm text-emerald-100">মেডিকেল টেকনোলজি রেজাল্ট পোর্টাল (লাইভ)</p>
                 </div>
             </div>
-            <div class="flex items-center gap-2 text-xs bg-emerald-900/60 px-3 py-1.5 rounded-full border border-emerald-500/40">
-                <span class="w-2.5 h-2.5 rounded-full bg-green-400 animate-ping"></span>
-                <span>BTEB সার্ভার থেকে সরাসরি</span>
-            </div>
+            <nav class="flex gap-2">
+                <button id="navHome" onclick="showPage('home')" class="bg-white text-emerald-800 text-sm font-bold px-4 py-2 rounded-full shadow transition">
+                    <i class="fa-solid fa-house"></i> হোম
+                </button>
+                <button id="navAbout" onclick="showPage('about')" class="bg-emerald-900/60 border border-emerald-500/40 text-white text-sm font-bold px-4 py-2 rounded-full transition hover:bg-emerald-900">
+                    <i class="fa-solid fa-book-open"></i> BTEB MT সম্পর্কে
+                </button>
+            </nav>
         </div>
     </header>
 
     <main class="max-w-6xl w-full mx-auto p-4 sm:p-6 flex-grow">
 
+        <!-- ================= ALERT ================= -->
         <div id="alertBox" class="hidden mb-6 p-4 rounded-xl border flex items-center justify-between gap-3 shadow-sm no-print">
             <div class="flex items-center gap-3 flex-wrap">
                 <i id="alertIcon" class="text-xl fa-solid"></i>
@@ -52,143 +58,192 @@
             <button onclick="closeAlert()" class="text-gray-500 hover:text-gray-700"><i class="fa-solid fa-xmark text-lg"></i></button>
         </div>
 
-        <div class="no-print bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden mb-8">
-            <div class="bg-gradient-to-r from-emerald-700 to-teal-800 px-6 py-4 text-white">
-                <h2 class="text-lg font-semibold"><i class="fa-solid fa-magnifying-glass text-amber-300"></i> পরীক্ষার ফলাফল অনুসন্ধান করুন</h2>
-            </div>
-            <form id="resultForm" onsubmit="handleResultSearch(event)" class="p-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">প্রযুক্তি</label>
-                        <select id="technology" required class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 text-sm">
-                            <option value="" disabled selected>প্রযুক্তি নির্বাচন করুন</option>
-                            <option value="DMT-LAB">ডিপ্লোমা ইন মেডিকেল টেকনোলজি (ল্যাবরেটরি)</option>
-                            <option value="DMT-RAD">ডিপ্লোমা ইন মেডিকেল টেকনোলজি (রেডিওলজি)</option>
-                            <option value="DMT-PHARM">ডিপ্লোমা ইন ফার্মেসি</option>
-                            <option value="DMT-DEN">ডিপ্লোমা ইন ডেন্টাল টেকনোলজি</option>
-                            <option value="DMT-PHY">ডিপ্লোমা ইন ফিজিওথেরাপী</option>
-                            <option value="DMT-NURS">ডিপ্লোমা ইন নার্সিং</option>
-                            <option value="DMT-ICU">ডিপ্লোমা ইন আইসিইউ ও ওটি</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">পরীক্ষার বছর</label>
-                        <select id="examYear" required class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 text-sm">
-                            <option value="2025">২০২৫</option>
-                            <option value="2024" selected>২০২৪</option>
-                            <option value="2023">২০২৩</option>
-                            <option value="2022">২০২২</option>
-                            <option value="2021">২০২১</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">পর্ব / সেমিস্টার</label>
-                        <select id="semester" required class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 text-sm">
-                            <option value="1st Semester">১ম পর্ব</option>
-                            <option value="2nd Semester">২য় পর্ব</option>
-                            <option value="3rd Semester">৩য় পর্ব</option>
-                            <option value="4th Semester">৪র্থ পর্ব</option>
-                            <option value="5th Semester">৫ম পর্ব</option>
-                            <option value="6th Semester">৬ষ্ঠ পর্ব</option>
-                            <option value="7th Semester">৭ম পর্ব</option>
-                            <option value="8th Semester" selected>৮ম পর্ব (Final)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">রোল নম্বর</label>
-                        <input type="number" id="rollNo" placeholder="যেমন: 654321" required class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 uppercase mb-1">রেজিস্ট্রেশন নম্বর</label>
-                        <input type="number" id="regNo" placeholder="যেমন: 1502145890" required class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 text-sm">
-                    </div>
-                    <div class="flex items-end">
-                        <button type="submit" id="submitBtn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold p-2.5 rounded-lg shadow flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-paper-plane"></i><span>ফলাফল দেখুন</span>
-                        </button>
-                    </div>
+        <!-- ============ হোম পেজ ============ -->
+        <div id="pageHome">
+
+            <!-- SEARCH FORM (সেমিস্টার বাদ) -->
+            <div class="no-print bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden mb-8">
+                <div class="bg-gradient-to-r from-emerald-700 to-teal-800 px-6 py-4 text-white">
+                    <h2 class="text-lg font-semibold"><i class="fa-solid fa-magnifying-glass text-amber-300"></i> পরীক্ষার ফলাফল অনুসন্ধান করুন</h2>
                 </div>
-            </form>
-        </div>
-
-        <div id="recentSection" class="no-print mb-8 hidden">
-            <h3 class="text-sm font-bold text-gray-600 mb-2"><i class="fa-solid fa-history text-emerald-600"></i> সাম্প্রতিক অনুসন্ধান:</h3>
-            <div id="recentList" class="flex gap-2 overflow-x-auto pb-2 custom-scrollbar"></div>
-        </div>
-
-        <div id="loadingSpinner" class="hidden no-print my-12 text-center">
-            <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-emerald-600 border-t-transparent"></div>
-            <p class="mt-3 text-emerald-800 font-semibold text-sm">BTEB সার্ভার থেকে ফলাফল আনা হচ্ছে... (১০-২০ সেকেন্ড লাগতে পারে)</p>
-        </div>
-
-        <div id="resultContainer" class="hidden">
-            <div class="no-print bg-white p-4 rounded-xl shadow border mb-6 flex flex-wrap justify-between gap-4">
-                <span class="font-bold text-emerald-700 text-sm"><i class="fa-solid fa-circle-check"></i> ফলাফল প্রদর্শিত হয়েছে</span>
-                <div class="flex gap-3">
-                    <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm px-4 py-2 rounded-lg shadow"><i class="fa-solid fa-print"></i> প্রিন্ট</button>
-                    <button onclick="resetSearch()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm px-4 py-2 rounded-lg"><i class="fa-solid fa-rotate-left"></i> নতুন সার্চ</button>
-                </div>
+                <form id="resultForm" onsubmit="handleResultSearch(event)" class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">প্রযুক্তি</label>
+                            <select id="technology" required class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 text-sm">
+                                <option value="" disabled selected>প্রযুক্তি নির্বাচন করুন</option>
+                                <option value="DMT-LAB">ডিপ্লোমা ইন মেডিকেল টেকনোলজি (ল্যাবরেটরি)</option>
+                                <option value="DMT-RAD">ডিপ্লোমা ইন মেডিকেল টেকনোলজি (রেডিওলজি)</option>
+                                <option value="DMT-PHARM">ডিপ্লোমা ইন ফার্মেসি</option>
+                                <option value="DMT-DEN">ডিপ্লোমা ইন ডেন্টাল টেকনোলজি</option>
+                                <option value="DMT-PHY">ডিপ্লোমা ইন ফিজিওথেরাপী</option>
+                                <option value="DMT-NURS">ডিপ্লোমা ইন নার্সিং</option>
+                                <option value="DMT-ICU">ডিপ্লোমা ইন আইসিইউ ও ওটি</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">পরীক্ষার বছর (২০০৫ - ২০২৬)</label>
+                            <select id="examYear" required class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 text-sm"></select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">রোল নম্বর</label>
+                            <input type="number" id="rollNo" placeholder="যেমন: 654321" required class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">রেজিস্ট্রেশন নম্বর</label>
+                            <input type="number" id="regNo" placeholder="যেমন: 1502145890" required class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 text-sm">
+                        </div>
+                        <div class="flex items-end lg:col-span-2">
+                            <button type="submit" id="submitBtn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold p-2.5 rounded-lg shadow flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-paper-plane"></i><span>ফলাফল দেখুন</span>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-3"><i class="fa-solid fa-circle-info"></i> সেশন অটো-ডিটেক্ট হয় — সিস্টেম নিজেই উভয় সেশন (Jan-Jun / Jul-Dec) চেক করে রেজাল্ট আনে।</p>
+                </form>
             </div>
 
-            <div class="print-container bg-white rounded-2xl shadow-2xl border p-6 sm:p-10">
-                <div class="border-b-2 border-emerald-800 pb-6 mb-6 text-center">
-                    <i class="fa-solid fa-graduation-cap text-4xl text-emerald-800 mb-2"></i>
-                    <h2 class="text-xl sm:text-2xl font-bold text-emerald-900">BANGLADESH TECHNICAL EDUCATION BOARD, DHAKA</h2>
-                    <h3 class="text-base font-bold text-red-700 mt-1">বাংলাদেশ কারিগরি শিক্ষা বোর্ড, ঢাকা</h3>
-                    <p class="text-xs text-gray-500 mt-1">Diploma in Medical Technology Examination</p>
-                    <div class="mt-3 inline-block bg-emerald-100 text-emerald-900 text-xs font-bold px-4 py-1 rounded-full border border-emerald-300">
-                        <span id="resExamTitle"></span>
+            <!-- RECENT -->
+            <div id="recentSection" class="no-print mb-8 hidden">
+                <h3 class="text-sm font-bold text-gray-600 mb-2"><i class="fa-solid fa-history text-emerald-600"></i> সাম্প্রতিক অনুসন্ধান:</h3>
+                <div id="recentList" class="flex gap-2 overflow-x-auto pb-2 custom-scrollbar"></div>
+            </div>
+
+            <!-- LOADING -->
+            <div id="loadingSpinner" class="hidden no-print my-12 text-center">
+                <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-emerald-600 border-t-transparent"></div>
+                <p class="mt-3 text-emerald-800 font-semibold text-sm">BTEB সার্ভার থেকে ফলাফল আনা হচ্ছে... (১০-২০ সেকেন্ড লাগতে পারে)</p>
+            </div>
+
+            <!-- RESULT -->
+            <div id="resultContainer" class="hidden">
+                <div class="no-print bg-white p-4 rounded-xl shadow border mb-6 flex flex-wrap justify-between gap-4">
+                    <span class="font-bold text-emerald-700 text-sm"><i class="fa-solid fa-circle-check"></i> ফলাফল প্রদর্শিত হয়েছে</span>
+                    <div class="flex gap-3">
+                        <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm px-4 py-2 rounded-lg shadow"><i class="fa-solid fa-print"></i> প্রিন্ট</button>
+                        <button onclick="resetSearch()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm px-4 py-2 rounded-lg"><i class="fa-solid fa-rotate-left"></i> নতুন সার্চ</button>
                     </div>
                 </div>
 
-                <div class="bg-emerald-50/50 rounded-xl p-5 border border-emerald-200 mb-6 grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-8 text-sm">
-                    <div class="flex"><span class="w-40 text-gray-600">শিক্ষার্থীর নাম:</span><span id="resStudentName" class="font-bold"></span></div>
-                    <div class="flex"><span class="w-40 text-gray-600">রোল নম্বর:</span><span id="resRoll" class="font-bold text-emerald-800"></span></div>
-                    <div class="flex"><span class="w-40 text-gray-600">রেজিস্ট্রেশন:</span><span id="resReg" class="font-bold"></span></div>
-                    <div class="flex"><span class="w-40 text-gray-600">প্রযুক্তি:</span><span id="resTech" class="font-bold"></span></div>
-                    <div class="flex md:col-span-2"><span class="w-40 text-gray-600 shrink-0">প্রতিষ্ঠান:</span><span id="resInstitute" class="font-bold"></span></div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                    <div class="bg-gradient-to-br from-emerald-600 to-emerald-800 text-white rounded-xl p-4 text-center shadow">
-                        <div class="text-xs uppercase text-emerald-100">ফলাফল (Status)</div>
-                        <div id="resStatus" class="text-lg font-bold mt-1 text-amber-300">—</div>
+                <div class="print-container bg-white rounded-2xl shadow-2xl border p-6 sm:p-10">
+                    <div class="border-b-2 border-emerald-800 pb-6 mb-6 text-center">
+                        <i class="fa-solid fa-graduation-cap text-4xl text-emerald-800 mb-2"></i>
+                        <h2 class="text-xl sm:text-2xl font-bold text-emerald-900">BANGLADESH TECHNICAL EDUCATION BOARD, DHAKA</h2>
+                        <h3 class="text-base font-bold text-red-700 mt-1">বাংলাদেশ কারিগরি শিক্ষা বোর্ড, ঢাকা</h3>
+                        <p class="text-xs text-gray-500 mt-1">Diploma in Medical Technology Examination</p>
+                        <div class="mt-3 inline-block bg-emerald-100 text-emerald-900 text-xs font-bold px-4 py-1 rounded-full border border-emerald-300">
+                            <span id="resExamTitle"></span>
+                        </div>
                     </div>
-                    <div class="bg-gradient-to-br from-teal-600 to-teal-800 text-white rounded-xl p-4 text-center shadow">
-                        <div class="text-xs uppercase text-teal-100">GPA</div>
-                        <div id="resGPA" class="text-2xl font-extrabold mt-1">—</div>
+
+                    <!-- সব তথ্য অটোমেটিক -->
+                    <div class="bg-emerald-50/50 rounded-xl p-5 border border-emerald-200 mb-6">
+                        <h4 class="text-xs font-bold text-emerald-800 uppercase mb-3"><i class="fa-solid fa-id-card"></i> শিক্ষার্থীর তথ্য</h4>
+                        <div id="resDetails" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2.5 text-sm"></div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                        <div id="resStatusBox" class="bg-gradient-to-br from-emerald-600 to-emerald-800 text-white rounded-xl p-4 text-center shadow">
+                            <div class="text-xs uppercase text-emerald-100">ফলাফল (Result)</div>
+                            <div id="resStatus" class="text-lg font-bold mt-1">—</div>
+                        </div>
+                        <div class="bg-gradient-to-br from-teal-600 to-teal-800 text-white rounded-xl p-4 text-center shadow">
+                            <div class="text-xs uppercase text-teal-100">CGPA / Division / Grade</div>
+                            <div id="resGPA" class="text-2xl font-extrabold mt-1">—</div>
+                        </div>
+                    </div>
+
+                    <!-- ডাইনামিক সাবজেক্ট টেবিল -->
+                    <div id="resTableWrap" class="overflow-x-auto mb-6"></div>
+
+                    <div class="text-center text-[11px] text-gray-400 border-t pt-3">
+                        বি.দ্র.: ফলাফল BTEB সার্ভার থেকে লাইভ আনা হয়। কোনো গরমিলে বোর্ডের মূল রেকর্ড চূড়ান্ত।
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <div class="overflow-x-auto mb-6">
-                    <table class="w-full text-left text-sm border-collapse border border-gray-300">
-                        <thead>
-                            <tr class="bg-emerald-800 text-white text-xs uppercase">
-                                <th class="p-3 border border-emerald-900 text-center">কোড</th>
-                                <th class="p-3 border border-emerald-900">বিষয়</th>
-                                <th class="p-3 border border-emerald-900 text-center">প্রাপ্ত নম্বর</th>
-                                <th class="p-3 border border-emerald-900 text-center">গ্রেড</th>
-                                <th class="p-3 border border-emerald-900 text-center">পয়েন্ট</th>
-                            </tr>
-                        </thead>
-                        <tbody id="resSubjectsBody" class="divide-y divide-gray-200"></tbody>
-                    </table>
+        <!-- ============ BTEB MT সম্পর্কে পেজ ============ -->
+        <div id="pageAbout" class="hidden">
+            <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+                <div class="bg-gradient-to-r from-emerald-700 to-teal-800 px-6 py-5 text-white">
+                    <h2 class="text-xl font-bold"><i class="fa-solid fa-book-open text-amber-300"></i> BTEB ও মেডিকেল টেকনোলজি শিক্ষার বিস্তারিত ইতিহাস</h2>
+                    <p class="text-xs text-emerald-100 mt-1">প্রতিষ্ঠা • মেডিকেল টেকনোলজি কোর্সের যাত্রা • সরকারি সিদ্ধান্ত • বর্তমান অবস্থা</p>
                 </div>
 
-                <div class="text-center text-[11px] text-gray-400 border-t pt-3">
-                    বি.দ্র.: ফলাফল BTEB সার্ভার থেকে লাইভ আনা হয়। কোনো গরমিলে বোর্ডের মূল রেকর্ড চূড়ান্ত।
+                <div class="p-6 sm:p-8 space-y-6 text-sm sm:text-base leading-relaxed text-gray-700">
+
+                    <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-5">
+                        <h3 class="font-bold text-emerald-800 text-lg mb-2"><i class="fa-solid fa-landmark"></i> ১. বাংলাদেশ কারিগরি শিক্ষা বোর্ড (BTEB) — প্রতিষ্ঠা</h3>
+                        <p>বাংলাদেশ কারিগরি শিক্ষা বোর্ড দেশের কারিগরি শিক্ষার জাতীয় পরীক্ষা নিয়ন্ত্রক সংস্থা। <b>১৯৬৯ সালে</b> অধ্যাদেশের (Ordinance No. 1 of 1969) মাধ্যমে "East Pakistan Technical Education Board" নামে এর যাত্রা শুরু হয়। মহান মুক্তিযুদ্ধের পর ১৯৭১-এ স্বাধীন বাংলাদেশে এটি <b>বাংলাদেশ কারিগরি শিক্ষা বোর্ড</b> নামে পুনর্গঠিত হয়। শিক্ষা মন্ত্রণালয়ের কারিগরি ও মাদ্রাসা শিক্ষা বিভাগের অধীনে বোর্ডটি প্রতিষ্ঠান অনুমোদন, কারিকুলাম প্রণয়ন, পরীক্ষা আয়োজন ও সনদ প্রদানের দায়িত্ব পালন করে।</p>
+                    </div>
+
+                    <div class="bg-teal-50 border border-teal-200 rounded-xl p-5">
+                        <h3 class="font-bold text-teal-800 text-lg mb-2"><i class="fa-solid fa-microscope"></i> ২. মেডিকেল টেকনোলজি শিক্ষার সূচনা (ঢাকা থেকে যাত্রা)</h3>
+                        <p>স্বাধীনতার পর দেশের স্বাস্থ্যখাতে দক্ষ টেকনোলজিস্টের বড় ঘাটতি দেখা দেয়। শুরুতে হাসপাতালভিত্তিক প্রশিক্ষণের মাধ্যমে ল্যাবরেটরি টেকনিশিয়ান তৈরি করা হতো। পরবর্তীতে এই প্রশিক্ষণকে সংগঠিত করে <b>Institute of Health Technology (IHT)</b> প্রতিষ্ঠা করা হয় এবং BTEB-র অধীনে <b>ডিপ্লোমা-ইন-মেডিকেল টেকনোলজি</b> কোর্স চালু হয়। ঢাকাসহ বিভিন্ন বিভাগীয় ও জেলা শহরে IHT গড়ে ওঠার মধ্য দিয়ে এই শিক্ষা প্রাতিষ্ঠানিক রূপ পায়।</p>
+                        <p class="mt-2">কোর্সটি <b>৪ বছর মেয়াদি ও ৮টি পর্বের (সেমিস্টার)</b> পাঠক্রমে পরিচালিত হতো। জনপ্রিয় টেকনোলজিগুলোর মধ্যে ছিল — ল্যাবরেটরি মেডিসিন, রেডিওলজি ও ইমেজিং, ফার্মেসি, ডেন্টাল, ফিজিওথেরাপি, ICU ও OT টেকনোলজি ইত্যাদি।</p>
+                    </div>
+
+                    <div class="bg-red-50 border-2 border-red-300 rounded-xl p-5">
+                        <h3 class="font-bold text-red-800 text-lg mb-2"><i class="fa-solid fa-triangle-exclamation"></i> ৩. গুরুত্বপূর্ণ সরকারি সিদ্ধান্ত — BTEB-র অধীনে MT কোর্স বন্ধ ও IHT-তে স্থানান্তর</h3>
+                        <p>পরবর্তীকালে সরকারি সিদ্ধান্তে <b>BTEB-র অধীনে পরিচালিত মেডিকেল টেকনোলজি কোর্সগুলো বন্ধ করা হয়</b> এবং সেগুলো আলাদা করে <b>সকল হেলথ টেকনোলজি কোর্স IHT-র (Institute of Health Technology) অধীনে</b> এনে পরিচালনার ব্যবস্থা করা হয়। অর্থাৎ এখন:</p>
+                        <ul class="list-disc list-inside space-y-1.5 mt-3">
+                            <li>BTEB-র অধীনে নতুন মেডিকেল টেকনোলজি ভর্তি/কোর্স পরিচালনা <b>বন্ধ</b></li>
+                            <li>সকল হেলথ টেকনোলজি কোর্স এখন <b>IHT-র অধীনে</b> পরিচালিত হচ্ছে</li>
+                            <li>আগের পাস করা শিক্ষার্থীদের ফলাফল যাচাই ও সনদের জন্য BTEB-র আর্কাইভ এখনও ব্যবহৃত হচ্ছে — এই পোর্টাল সেই <b>পুরনো রেকর্ড (২০০৫ থেকে)</b> সার্চ করার সুবিধা দেয়</li>
+                        </ul>
+                        <p class="mt-3 text-xs text-gray-500"><i class="fa-solid fa-circle-info"></i> নীতিগত পরিবর্তনের সর্বশেষ ও অফিসিয়াল বিবরণের জন্য BTEB ও IHT-র অফিসিয়াল নোটিশ দেখুন।</p>
+                    </div>
+
+                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-5">
+                        <h3 class="font-bold text-amber-800 text-lg mb-2"><i class="fa-solid fa-certificate"></i> ৪. BTEB সনদ — সরকার স্বীকৃত ও সর্বত্র গ্রহণযোগ্য</h3>
+                        <p>BTEB প্রদত্ত ডিপ্লোমা সনদ <b>সম্পূর্ণ সরকার স্বীকৃত (Government Certified)</b>। এই সনদ:</p>
+                        <ul class="list-disc list-inside space-y-1.5 mt-2">
+                            <li>সরকারি ও বেসরকারি চাকরিতে সরাসরি গ্রহণযোগ্য</li>
+                            <li>উচ্চশিক্ষায় (বিএসসি প্যাস-কোর্স, লেটারাল ভর্তি) ব্যবহারযোগ্য</li>
+                            <li>বিদেশে কর্মসংস্থান ও সনদ যাচাইয়ে স্বীকৃত</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-rose-50 border border-rose-200 rounded-xl p-5">
+                        <h3 class="font-bold text-rose-800 text-lg mb-2"><i class="fa-solid fa-briefcase-medical"></i> ৫. পেশা ও চাহিদা</h3>
+                        <p>মেডিকেল টেকনোলজি ডিপ্লোমাধারীরা সরকারি-বেসরকারি হাসপাতাল, ডায়াগনস্টিক সেন্টার, ব্লাড ব্যাংক, ফার্মেসি, ফিজিওথেরাপি সেন্টারসহ বিভিন্ন স্বাস্থ্য প্রতিষ্ঠানে কর্মসূযোগ পান। জনসংখ্যা বৃদ্ধি, স্বাস্থ্যসেবার সম্প্রসারণ এবং দক্ষ স্বাস্থ্য জনবলের ঘাটতি থাকায় এই পেশার <b>চাহিদা দিন দিন বাড়ছে</b>। মধ্যপ্রাচ্যসহ বিভিন্ন দেশে বাংলাদেশি টেকনোলজিস্টদের চাহিদাও রয়েছে।</p>
+                    </div>
+
+                    <div class="bg-gray-50 border border-gray-200 rounded-xl p-5">
+                        <h3 class="font-bold text-gray-800 text-lg mb-2"><i class="fa-solid fa-rocket"></i> ৬. ভবিষ্যৎ দিগন্ত</h3>
+                        <p>টেলিমেডিসিন, আধুনিক ইমেজিং (MRI, CT), অটোমেটেড ল্যাব ও এআই-ভিত্তিক ডায়াগনস্টিকসের যুগে টেকনোলজিস্টদের ভূমিকা আরও গুরুত্বপূর্ণ হচ্ছে। IHT-র অধীনে সংগঠিত এই শিক্ষা ধারা ভবিষ্যতে আরও আধুনিক ও আন্তর্জাতিক মানসম্পন্ন হবে বলে আশা করা যায়।</p>
+                    </div>
+
+                    <p class="text-xs text-gray-400 text-center border-t pt-4">বি.দ্র.: এই বিবরণী সাধারণ তথ্যভিত্তিক — অফিসিয়াল রেকর্ড ও সর্বশেষ সিদ্ধান্তের জন্য BTEB/IHT-র অফিসিয়াল সূত্র দেখুন।</p>
                 </div>
             </div>
         </div>
     </main>
 
+    <!-- ================= FOOTER ================= -->
     <footer class="bg-gray-900 text-gray-400 text-xs py-6 mt-12 no-print">
-        <div class="max-w-6xl mx-auto px-4 text-center space-y-2">
+        <div class="max-w-6xl mx-auto px-4 text-center space-y-3">
             <p class="text-gray-300">বাংলাদেশ কারিগরি শিক্ষা বোর্ড (BTEB) — মেডিকেল টেকনোলজি শাখা</p>
-            <p>© ২০২৪-২০২৬ | ফলাফলের সূত্র: BTEB অফিসিয়াল সার্ভার</p>
+            <p>© ২০০৫-২০২৬ রেকর্ড | ফলাফলের সূত্র: BTEB অফিসিয়াল সার্ভার</p>
+            <div class="flex items-center justify-center gap-3 pt-2 border-t border-gray-800 mt-3 flex-wrap">
+                <span class="text-gray-500">ডেভেলপার:</span>
+                <span class="text-white font-bold"><i class="fa-solid fa-code text-emerald-400"></i> Shovon</span>
+                <a href="https://wa.me/8801843860547?text=আসসালামু%20আলাইকুম,%20BTEB%20রেজাল্ট%20পোর্টাল%20সম্পর্কে%20জানতে%20চাই" target="_blank"
+                   class="bg-green-600 hover:bg-green-500 text-white font-bold px-4 py-1.5 rounded-full transition flex items-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-lg"></i> WhatsApp: 01843860547
+                </a>
+            </div>
         </div>
     </footer>
 
+    <!-- ভাসমান WhatsApp বাটন -->
+    <a href="https://wa.me/8801843860547?text=আসসালামু%20আলাইকুম" target="_blank"
+       class="no-print fixed bottom-5 right-5 z-40 w-14 h-14 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-2xl flex items-center justify-center transition hover:scale-110">
+        <i class="fa-brands fa-whatsapp text-3xl"></i>
+    </a>
+
+    <!-- ================= DEBUG MODAL ================= -->
     <div id="debugModal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 no-print">
         <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full p-5">
             <div class="flex justify-between items-center mb-3">
@@ -202,14 +257,39 @@
         </div>
     </div>
 
+    <!-- ================= JAVASCRIPT ================= -->
     <script>
         /* ═══════════════ কনফিগারেশন ═══════════════ */
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz0hIEo6YyiazfYi1JoIrVs_K7J59D9Z43p0-CVmvufXVCZWAyqaqa4ptPd0Uurn2k/exec';
         const EXAM_CODE = '75';  // 75 = DIPLOMA IN MEDICAL
 
         const bn2en = s => String(s).replace(/[০-৯]/g, d => '০১২৩৪৫৬৭৮৯'.indexOf(d));
+        const en2bn = s => String(s).replace(/[0-9]/g, d => '০১২৩৪৫৬৭৮৯'[d]);
 
         const POINTS = ['4.00','3.75','3.50','3.25','3.00','2.75','2.50','2.25','2.00','1.00','0.00'];
+
+        /* ---------- বছর ড্রপডাউন (২০২৬ → ২০০৫) ---------- */
+        (function fillYears() {
+            const sel = document.getElementById('examYear');
+            for (let y = 2026; y >= 2005; y--) {
+                const o = document.createElement('option');
+                o.value = String(y);
+                o.textContent = en2bn(String(y)) + ' (' + y + ')';
+                if (y === 2024) o.selected = true;
+                sel.appendChild(o);
+            }
+        })();
+
+        /* ---------- পেজ সুইচিং ---------- */
+        function showPage(p) {
+            document.getElementById('pageHome').classList.toggle('hidden', p !== 'home');
+            document.getElementById('pageAbout').classList.toggle('hidden', p !== 'about');
+            const on  = 'bg-white text-emerald-800 text-sm font-bold px-4 py-2 rounded-full shadow transition';
+            const off = 'bg-emerald-900/60 border border-emerald-500/40 text-white text-sm font-bold px-4 py-2 rounded-full transition hover:bg-emerald-900';
+            document.getElementById('navHome').className = p === 'home' ? on : off;
+            document.getElementById('navAbout').className = p === 'about' ? on : off;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
         /* ---------- HTTP ---------- */
         async function fetchTimeout(url, opts = {}, ms = 60000) {
@@ -225,7 +305,7 @@
             const text = await r.text();
             let j;
             try { j = JSON.parse(text); }
-            catch (e) { throw new Error('Apps Script ঠিকমতো সাড়া দিচ্ছে না — Deploy → Manage deployments → New version দিয়েছেন কিনা দেখুন'); }
+            catch (e) { throw new Error('Apps Script ঠিকমতো সাড়া দিচ্ছে না — New version deploy করেছেন কিনা দেখুন'); }
             if (j.error) {
                 const err = new Error('GAS: ' + j.error);
                 err.gasDebug = j;
@@ -241,11 +321,32 @@
                 .replace(/&amp;/gi, '&').replace(/&lt;/gi, '<').replace(/&gt;/gi, '>')
                 .replace(/\s+/g, ' ').trim();
         }
-        const cleanVal = s => String(s).replace(/^[\s:–—-]+/, '').trim();
+        const cleanVal = s => String(s).replace(/^[\s:–—-]+/, '').replace(/[\s:–—-]+$/, '').trim();
+        const isLabel = s => s.length > 0 && s.length < 45 && !/\d/.test(s) && /[a-zA-Z\u0980-\u09FF]/.test(s);
+        const HEADER_KEYS = ['code','subject','grade','point','marks','total','sl','serial','title','result'];
+        function isHeaderKey(k) {
+            const kl = bn2en(k).toLowerCase().replace(/[^a-z ]/g, '').trim();
+            return HEADER_KEYS.includes(kl);
+        }
+
+        /* GPA/CGPA/Total/হেডার টাইপ ভুল সারি চেনা */
+        function isSummaryRow(code, title) {
+            const c = bn2en(code).toLowerCase().trim();
+            const t = bn2en(title).toLowerCase().trim();
+            if (/^(gpa|cgpa|total|result|division|grade|remarks?|sl\.?|code|subject)$/.test(c)) return true;
+            if (/^(gpa|cgpa|total|result|division|remarks?|মোট|গড়|ফলাফল|গ্রেড|মন্তব্য|জিপিএ)/.test(t) && !/^\d/.test(c)) return true;
+            return false;
+        }
+
+        function detectStatus(text) {
+            const en = bn2en(text);
+            if (/\bpass(?:ed)?\b|promoted|উত্তীর্ণ/i.test(en)) return 'PASSED';
+            if (/\bfail(?:ed)?\b|referred|reappear|অকৃতকার্য/i.test(en)) return 'FAILED';
+            return '';
+        }
 
         function parseResult(html) {
-            const out = { found: false, name: '', roll: '', reg: '', institute: '', technology: '',
-                          status: '', gpa: '', subjects: [] };
+            const out = { found: false, details: {}, subjects: [], status: '', gpa: '' };
             if (!html) { out.message = 'BTEB সার্ভার থেকে সাড়া পাওয়া যায়নি।'; return out; }
 
             let rm; const rowRe = /<tr\b[^>]*>([\s\S]*?)<\/tr>/gi;
@@ -254,45 +355,77 @@
                 const cellRe = /<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi;
                 while ((cm = cellRe.exec(rm[1])) !== null) cells.push(stripTags(cm[1]));
                 const c = cells.filter(x => x !== '' && !/^[-–—:]+$/.test(x));
+                if (c.length < 2) continue;
 
-                if (c.length === 2) {
-                    const k = c[0], v = cleanVal(c[1]), kl = bn2en(k).toLowerCase();
-                    if ((kl.includes('name') || k.includes('নাম')) && !kl.includes('exam') && !out.name) out.name = v;
-                    if (kl.includes('roll')) out.roll = bn2en(v);
-                    if (kl.includes('reg')) out.reg = bn2en(v);
-                    if (kl.includes('institut') || k.includes('প্রতিষ্ঠান')) out.institute = v;
-                    if (kl.includes('tech') || kl.includes('trade')) out.technology = v;
-                    if (/g\.?\s?p\.?\s?a|গ্রেড\s*পয়েন্ট|জিপিএ/i.test(kl)) {
-                        const m = bn2en(v).match(/([0-4](?:\.\d{1,2})?)/);
-                        if (m && !out.gpa) out.gpa = m[1];
+                // কী-ভ্যালু জোড়া (শিক্ষার্থীর তথ্য)
+                if (c.length % 2 === 0) {
+                    let allPairs = true;
+                    for (let i = 0; i < c.length; i += 2) if (!isLabel(c[i])) { allPairs = false; break; }
+                    if (allPairs) {
+                        for (let i = 0; i < c.length; i += 2) {
+                            const k = cleanVal(c[i]), v = cleanVal(c[i + 1] || '');
+                            if (k && v && !isHeaderKey(k) && k.toLowerCase() !== v.toLowerCase() && !out.details[k]) {
+                                out.details[k] = v;
+                            }
+                        }
+                        continue;
                     }
                 }
-                else if (c.length >= 4 && c.some(x => /\d/.test(x))) {
+
+                // সাবজেক্ট সারি
+                if (c.length >= 3 && c.some(x => /\d/.test(x))) {
                     let r = [...c];
-                    if (/^\d{1,2}$/.test(r[0]) && parseInt(r[0]) <= 20 && r.length >= 5) r.shift();
+                    if (/^\d{1,2}$/.test(r[0]) && parseInt(r[0]) <= 20 && r.length >= 4) r.shift();
                     const nums = []; let grade = '';
                     for (let i = 2; i < r.length; i++) {
                         const cn = bn2en(r[i]).trim();
                         if (/^[A-B][+-]?$/i.test(cn) || /^F$/i.test(cn)) { grade = cn.toUpperCase(); continue; }
                         if (/^\d+(\.\d+)?$/.test(cn)) nums.push(cn);
                     }
+                    if (nums.length === 0 && !grade) continue;
+
+                    const code = r[0] || '', title = r[1] || '';
+                    if (isSummaryRow(code, title)) continue;   // ← অতিরিক্ত ঘর/সারি ফিল্টার
+
                     let point = '';
                     for (let i = nums.length - 1; i >= 0; i--) {
                         if (POINTS.includes(Number(nums[i]).toFixed(2))) { point = nums[i]; nums.splice(i, 1); break; }
                     }
-                    out.subjects.push({ code: r[0] || '', title: r[1] || '', marks: nums.join(' / '), grade, point });
+                    out.subjects.push({ code, title, marks: nums.join(' / '), grade, point });
                 }
             }
 
-            const text = stripTags(html), en = bn2en(text);
-            if (!out.gpa) { const m = en.match(/G\.?\s?P\.?\s?A\.?\s*[:\-]?\s*([0-4](?:\.\d{1,2})?)/i); if (m) out.gpa = m[1]; }
-            if (/(passed|promoted|উত্তীর্ণ)/iu.test(text)) out.status = 'PASSED';
-            else if (/(failed|referred|reappear|অকৃতকার্য)/iu.test(text)) out.status = 'FAILED';
+            /* ----- স্ট্যাটাস ----- */
+            const dKeys = Object.keys(out.details);
+            let status = '';
+            const resKey = dKeys.find(k => /^result$|^ফলাফল/i.test(bn2en(k).trim())) ||
+                           dKeys.find(k => /result|ফলাফল/i.test(bn2en(k)));
+            if (resKey) {
+                const rv = out.details[resKey];
+                if (/pass|promoted|উত্তীর্ণ/i.test(rv)) status = 'PASSED';
+                else if (/fail|refer|অকৃতকার্য/i.test(rv)) status = 'FAILED';
+                else if (rv) status = rv.toUpperCase();
+            }
+            if (status !== 'PASSED' && status !== 'FAILED') {
+                const fallback = detectStatus(stripTags(html));
+                if (fallback) status = fallback;
+            }
+            out.status = status;
 
-            out.found = out.subjects.length > 0 || (out.name !== '' && out.gpa !== '');
+            /* ----- CGPA / Division / Grade ----- */
+            const gKey = dKeys.find(k => /cgpa|g\.?\s?p\.?\s?a|division|grade|জিপিএ|গ্রেড/i.test(bn2en(k)));
+            if (gKey) out.gpa = out.details[gKey];
+            if (!out.gpa) {
+                const en = bn2en(stripTags(html));
+                const m = en.match(/(?:C\.?\s?G\.?\s?P\.?\s?A\.?|G\.?\s?P\.?\s?A\.?|Division|Grade)\s*[:\-]?\s*([0-4](?:\.\d{1,2})?|[A-F][+-]?)/i);
+                if (m) out.gpa = m[1];
+            }
+
+            out.found = out.subjects.length > 0 || dKeys.length >= 3;
             if (!out.found) {
+                const en = bn2en(stripTags(html));
                 out.message = /(no result|not found|no record|invalid|query error)/i.test(en)
-                    ? 'এই তথ্যে কোনো ফলাফল পাওয়া যায়নি। রোল/রেজি/বছর/পর্ব যাচাই করুন।'
+                    ? 'এই তথ্যে কোনো ফলাফল পাওয়া যায়নি। রোল/রেজি/বছর যাচাই করুন।'
                     : 'ফলাফল পড়া যায়নি — ডিবাগ বাটনে চেপে তথ্য পাঠান।';
             }
             return out;
@@ -326,6 +459,10 @@
         /* ---------- UI ---------- */
         let lastDebug = null;
 
+        function escapeHtml(s) {
+            return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
         function showAlert(msg, type = 'error') {
             const box = document.getElementById('alertBox');
             const icon = document.getElementById('alertIcon');
@@ -353,33 +490,85 @@
             navigator.clipboard.writeText(t.value).then(() => alert('কপি হয়েছে!'));
         }
 
-        function displayResult(d, year, sem, techLabel) {
-            document.getElementById('resExamTitle').innerText = sem + ' Examination - ' + year;
-            document.getElementById('resStudentName').innerText = d.name || '—';
-            document.getElementById('resRoll').innerText = d.roll || document.getElementById('rollNo').value;
-            document.getElementById('resReg').innerText = d.reg || document.getElementById('regNo').value;
-            document.getElementById('resTech').innerText = d.technology || techLabel;
-            document.getElementById('resInstitute').innerText = d.institute || '—';
+        /* ---------- ডাইনামিক টেবিল (খালি কলাম বাদ যাবে) ---------- */
+        function buildSubjectsTable(subjects) {
+            const wrap = document.getElementById('resTableWrap');
+            wrap.innerHTML = '';
+            if (!subjects || !subjects.length) return;
 
+            const hasCode  = subjects.some(s => s.code);
+            const hasMarks = subjects.some(s => s.marks);
+            const hasGrade = subjects.some(s => s.grade);
+            const hasPoint = subjects.some(s => s.point);
+
+            let thead = '<tr class="bg-emerald-800 text-white text-xs uppercase">';
+            thead += '<th class="p-3 border border-emerald-900 text-center">#</th>';
+            if (hasCode)  thead += '<th class="p-3 border border-emerald-900 text-center">কোড</th>';
+            thead += '<th class="p-3 border border-emerald-900">বিষয়</th>';
+            if (hasMarks) thead += '<th class="p-3 border border-emerald-900 text-center">প্রাপ্ত নম্বর</th>';
+            if (hasGrade) thead += '<th class="p-3 border border-emerald-900 text-center">গ্রেড</th>';
+            if (hasPoint) thead += '<th class="p-3 border border-emerald-900 text-center">পয়েন্ট</th>';
+            thead += '</tr>';
+
+            let rows = '';
+            subjects.forEach((s, i) => {
+                rows += '<tr class="' + (i % 2 === 0 ? 'bg-white' : 'bg-gray-50') + '">';
+                rows += '<td class="p-2.5 border text-center font-mono text-xs text-gray-500">' + (i + 1) + '</td>';
+                if (hasCode)  rows += '<td class="p-2.5 border text-center font-mono text-xs">' + escapeHtml(s.code) + '</td>';
+                rows += '<td class="p-2.5 border font-medium">' + escapeHtml(s.title || '—') + '</td>';
+                if (hasMarks) rows += '<td class="p-2.5 border text-center font-mono font-bold">' + escapeHtml(s.marks) + '</td>';
+                if (hasGrade) rows += '<td class="p-2.5 border text-center font-bold ' + (s.grade === 'F' ? 'text-red-600' : 'text-emerald-700') + '">' + escapeHtml(s.grade) + '</td>';
+                if (hasPoint) rows += '<td class="p-2.5 border text-center font-mono">' + escapeHtml(s.point) + '</td>';
+                rows += '</tr>';
+            });
+
+            wrap.innerHTML =
+                '<table class="w-full text-left text-sm border-collapse border border-gray-300">' +
+                '<thead>' + thead + '</thead>' +
+                '<tbody class="divide-y divide-gray-200">' + rows + '</tbody>' +
+                '</table>';
+        }
+
+        function displayResult(d, year, techLabel) {
+            document.getElementById('resExamTitle').innerText = 'Examination - ' + year;
+
+            // সব তথ্য অটোমেটিক গ্রিডে
+            const grid = document.getElementById('resDetails');
+            grid.innerHTML = '';
+            const entries = Object.entries(d.details || {});
+            if (!entries.length) {
+                grid.innerHTML = '<div class="text-gray-500 md:col-span-2">তথ্য পাওয়া যায়নি</div>';
+            }
+            entries.forEach(([k, v]) => {
+                const div = document.createElement('div');
+                div.className = 'flex gap-2 border-b border-emerald-100 pb-1.5';
+                div.innerHTML =
+                    '<span class="text-gray-600 font-medium min-w-[150px] shrink-0">' + escapeHtml(k) + ':</span>' +
+                    '<span class="font-bold text-gray-900 break-words">' + escapeHtml(v) + '</span>';
+                grid.appendChild(div);
+            });
+
+            // Result ব্যানার
             const st = document.getElementById('resStatus');
-            st.innerText = d.status || '—';
-            st.className = 'text-lg font-bold mt-1 ' + (d.status === 'FAILED' ? 'text-red-300' : 'text-amber-300');
+            const stBox = document.getElementById('resStatusBox');
+            if (d.status === 'PASSED') {
+                st.innerText = '✔ PASSED';
+                st.className = 'text-lg font-extrabold mt-1 text-amber-300';
+                stBox.className = 'bg-gradient-to-br from-emerald-600 to-emerald-800 text-white rounded-xl p-4 text-center shadow';
+            } else if (d.status === 'FAILED') {
+                st.innerText = '✘ FAILED';
+                st.className = 'text-lg font-extrabold mt-1 text-red-300';
+                stBox.className = 'bg-gradient-to-br from-red-700 to-red-900 text-white rounded-xl p-4 text-center shadow';
+            } else if (d.status) {
+                st.innerText = d.status;
+                st.className = 'text-lg font-bold mt-1 text-white';
+            } else {
+                st.innerText = '—';
+                st.className = 'text-lg font-bold mt-1 text-white';
+            }
 
             document.getElementById('resGPA').innerText = d.gpa || '—';
-
-            const tbody = document.getElementById('resSubjectsBody');
-            tbody.innerHTML = '';
-            (d.subjects || []).forEach((s, i) => {
-                const tr = document.createElement('tr');
-                tr.className = i % 2 === 0 ? 'bg-white' : 'bg-gray-50';
-                tr.innerHTML =
-                    '<td class="p-2.5 border text-center font-mono text-xs">' + (s.code || '—') + '</td>' +
-                    '<td class="p-2.5 border font-medium">' + (s.title || '—') + '</td>' +
-                    '<td class="p-2.5 border text-center font-mono font-bold">' + (s.marks || '—') + '</td>' +
-                    '<td class="p-2.5 border text-center font-bold ' + (s.grade === 'F' ? 'text-red-600' : 'text-emerald-700') + '">' + (s.grade || '—') + '</td>' +
-                    '<td class="p-2.5 border text-center font-mono">' + (s.point || '—') + '</td>';
-                tbody.appendChild(tr);
-            });
+            buildSubjectsTable(d.subjects || []);
 
             document.getElementById('resultContainer').classList.remove('hidden');
             document.getElementById('resultContainer').scrollIntoView({ behavior: 'smooth' });
@@ -419,22 +608,19 @@
         }
         document.addEventListener('DOMContentLoaded', renderHistory);
 
-        /* ---------- মূল প্রবাহ ---------- */
+        /* ---------- মূল প্রবাহ (সেশন অটো-ডিটেক্ট) ---------- */
         async function handleResultSearch(e) {
             e.preventDefault();
             const tech = document.getElementById('technology').value;
             const techLabel = document.getElementById('technology').selectedOptions[0].textContent;
             const year = document.getElementById('examYear').value;
-            const sem = document.getElementById('semester').value;
             const roll = document.getElementById('rollNo').value.trim();
             const reg = document.getElementById('regNo').value.trim();
 
             if (!tech) { showAlert('প্রযুক্তি নির্বাচন করুন।'); return; }
             if (!allowRequest()) { showAlert('খুব বেশি চেষ্টা হচ্ছে। ১ মিনিট পর আবার করুন।'); return; }
 
-            const semNum = parseInt(sem) || 1;
-            const sessPart = (semNum % 2 === 1) ? '21' : '22';
-            const params = { roll, reg, exam: EXAM_CODE, year, sess_part: sessPart };
+            const baseParams = { roll, reg, exam: EXAM_CODE, year };
 
             lastDebug = null;
             closeAlert();
@@ -444,34 +630,40 @@
             btn.disabled = true;
 
             try {
-                const ck = roll + '|' + reg + '|' + year + '|' + sem;
+                const ck = roll + '|' + reg + '|' + year;
                 const cached = getCache(ck);
                 if (cached) {
                     document.getElementById('loadingSpinner').classList.add('hidden');
                     btn.disabled = false;
-                    displayResult(cached, year, sem, techLabel);
+                    displayResult(cached, year, techLabel);
                     return;
                 }
 
-                const html = await fetchBtebResult(params);
-                const result = parseResult(html);
+                // সেশন অটো-ডিটেক্ট: প্রথমে Jul-Dec (22), না পেলে Jan-Jun (21)
+                let result = null, lastHtml = '', usedSess = '';
+                for (const sess of ['22', '21']) {
+                    const html = await fetchBtebResult({ ...baseParams, sess_part: sess });
+                    lastHtml = html; usedSess = sess;
+                    const r = parseResult(html);
+                    if (r.found) { result = r; break; }
+                }
 
-                if (!result.found) {
-                    lastDebug = { sent: params, responseSnippet: stripTags(html).slice(0, 4000) };
+                if (!result) {
+                    lastDebug = { sent: { ...baseParams, tried_sessions: ['22','21'] }, lastSession: usedSess, responseSnippet: stripTags(lastHtml).slice(0, 4000) };
                     document.getElementById('loadingSpinner').classList.add('hidden');
                     btn.disabled = false;
-                    showAlert(result.message || 'ফলাফল পাওয়া যায়নি।');
+                    showAlert('এই তথ্যে কোনো ফলাফল পাওয়া যায়নি। রোল/রেজি/বছর যাচাই করুন।');
                     return;
                 }
 
                 setCache(ck, result);
                 document.getElementById('loadingSpinner').classList.add('hidden');
                 btn.disabled = false;
-                displayResult(result, year, sem, techLabel);
+                displayResult(result, year, techLabel);
                 saveHistory(roll);
 
             } catch (err) {
-                lastDebug = { sent: params, error: String(err && err.message || err), gasDebug: (err && err.gasDebug) || null, time: new Date().toLocaleString('bn-BD') };
+                lastDebug = { sent: baseParams, error: String(err && err.message || err), gasDebug: (err && err.gasDebug) || null, time: new Date().toLocaleString('bn-BD') };
                 document.getElementById('loadingSpinner').classList.add('hidden');
                 btn.disabled = false;
                 showAlert('সংযোগ সমস্যা: ' + (err && err.message ? err.message : 'অজানা ত্রুটি'));
